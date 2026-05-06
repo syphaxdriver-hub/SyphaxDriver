@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PrestigeVTC – Chauffeur Privé France</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#050505;
+  --off:#0d0c0b;
+  --panel:#131210;
+  --gold:#c8a84b;
+  --gold2:#e8d08a;
+  --dim:rgba(200,168,75,0.12);
+  --muted:rgba(255,255,255,0.42);
+  --white:#f7f3ec;
+  --wa:#25D366;
+}
+html{scroll-behavior:smooth;font-size:16px}
+
+/* custom cursor */
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--black);
+  color:var(--white);
+  overflow-x:hidden;
+}
+
+/* ──────── NAV ──────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:28px 56px;
+  transition:padding 0.4s,background 0.4s;
+}
+nav.stuck{
+  padding:16px 56px;
+  background:rgba(5,5,5,0.88);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--dim);
+}
+.logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.5rem;font-weight:300;letter-spacing:4px;
+  color:var(--gold);text-decoration:none;text-transform:uppercase;
+}
+.logo em{color:var(--white);font-style:normal;}
+.nav-links{display:flex;gap:40px;list-style:none;}
+.nav-links a{
+  font-size:0.72rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  transition:color 0.2s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-3px;left:0;right:100%;height:1px;
+  background:var(--gold);transition:right 0.3s ease;
+}
+.nav-links a:hover{color:var(--white);}
+.nav-links a:hover::after{right:0;}
+.nav-wa{
+  display:flex;align-items:center;gap:8px;
+  background:var(--wa);color:#fff;
+  padding:9px 22px;border-radius:2px;
+  font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;font-weight:500;
+  transition:opacity 0.2s,transform 0.2s;
+  white-space:nowrap;
+}
+.nav-wa:hover{opacity:0.88;transform:translateY(-1px);}
+.nav-wa svg{width:15px;height:15px;fill:#fff;flex-shrink:0;}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+.burger span{display:block;width:22px;height:1.5px;background:var(--gold);transition:0.3s;}
+
+/* ──────── HERO ──────── */
+#hero{
+  min-height:100vh;
+  display:grid;place-items:center;
+  position:relative;overflow:hidden;
+  padding:120px 56px 80px;
+}
+.hero-grain{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:0.6;pointer-events:none;
+}
+.hero-glow{
+  position:absolute;
+  width:900px;height:900px;
+  background:radial-gradient(circle,rgba(200,168,75,0.09) 0%,transparent 65%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+  animation:pulse 6s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.08);}}
+.hero-line-v{
+  position:absolute;left:56px;top:0;bottom:0;
+  width:1px;background:linear-gradient(to bottom,transparent,var(--dim) 30%,var(--dim) 70%,transparent);
+}
+.hero-line-v2{
+  position:absolute;right:56px;top:0;bottom:0;
+  width:1px;background:linear-gradient(to bottom,transparent,var(--dim) 30%,var(--dim) 70%,transparent);
+}
+.hero-inner{
+  text-align:center;position:relative;z-index:2;
+  max-width:820px;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:16px;
+  font-size:0.68rem;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:36px;
+  opacity:0;animation:fadeUp 0.9s 0.2s forwards;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{
+  content:'';width:32px;height:1px;background:var(--gold);opacity:0.6;
+}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3.4rem,9vw,7.5rem);
+  font-weight:300;line-height:0.95;
+  margin-bottom:32px;letter-spacing:-1px;
+  opacity:0;animation:fadeUp 0.9s 0.4s forwards;
+}
+.hero-title .accent{
+  font-style:italic;color:var(--gold);
+  display:block;
+}
+.hero-sub{
+  font-size:0.95rem;line-height:1.8;
+  color:var(--muted);max-width:480px;margin:0 auto 52px;
+  font-weight:300;
+  opacity:0;animation:fadeUp 0.9s 0.6s forwards;
+}
+.hero-cta{
+  display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;
+  opacity:0;animation:fadeUp 0.9s 0.8s forwards;
+}
+.btn-wa{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--wa);color:#fff;
+  padding:16px 38px;
+  font-size:0.82rem;letter-spacing:2px;text-transform:uppercase;
+  font-weight:500;text-decoration:none;
+  transition:all 0.3s;border:none;cursor:none;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-wa:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(37,211,102,0.25);}
+.btn-wa svg{width:18px;height:18px;fill:#fff;flex-shrink:0;}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--white);
+  padding:16px 38px;
+  font-size:0.82rem;letter-spacing:2px;text-transform:uppercase;
+  font-weight:400;text-decoration:none;
+  border:1px solid rgba(255,255,255,0.18);
+  transition:all 0.3s;cursor:none;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.hero-scroll{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0;animation:fadeUp 0.9s 1.2s forwards;
+}
+.hero-scroll span{
+  font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);
+}
+.scroll-line{
+  width:1px;height:48px;
+  background:linear-gradient(to bottom,var(--gold),transparent);
+  animation:scrollLine 1.8s ease-in-out infinite;
+}
+@keyframes scrollLine{0%,100%{opacity:0.3;transform:scaleY(0.6);}50%{opacity:1;transform:scaleY(1);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+/* ──────── SERVICES ──────── */
+#services{
+  padding:120px 56px;
+  background:var(--off);
+  position:relative;
+}
+#services::before{
+  content:'';position:absolute;top:0;left:0;right:0;
+  height:1px;background:linear-gradient(90deg,transparent,var(--dim) 50%,transparent);
+}
+.section-header{margin-bottom:72px;}
+.sec-label{
+  font-size:0.68rem;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:14px;display:block;
+}
+.sec-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,5vw,3.8rem);font-weight:300;
+  line-height:1.05;
+}
+.sec-title em{font-style:italic;color:var(--gold);}
+.services-list{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--dim);max-width:1200px;
+}
+.srv{
+  background:var(--off);
+  padding:52px 44px;
+  position:relative;overflow:hidden;
+  transition:background 0.4s;
+}
+.srv::after{
+  content:'';position:absolute;
+  left:0;bottom:0;width:0;height:2px;
+  background:var(--gold);
+  transition:width 0.5s ease;
+}
+.srv:hover{background:var(--panel);}
+.srv:hover::after{width:100%;}
+.srv-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:0.85rem;color:rgba(200,168,75,0.35);
+  letter-spacing:2px;margin-bottom:32px;display:block;
+}
+.srv-icon{font-size:1.8rem;margin-bottom:20px;display:block;}
+.srv-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.4rem;font-weight:400;margin-bottom:14px;
+}
+.srv-desc{font-size:0.88rem;line-height:1.75;color:var(--muted);}
+
+/* ──────── FLEET ──────── */
+#fleet{
+  padding:120px 56px;
+  background:var(--black);
+}
+.fleet-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  max-width:1200px;margin-top:64px;
+}
+.car-card{
+  border:1px solid rgba(200,168,75,0.1);
+  overflow:hidden;position:relative;
+  transition:border-color 0.4s,transform 0.4s;
+}
+.car-card:hover{border-color:rgba(200,168,75,0.4);transform:translateY(-6px);}
+.car-vis{
+  height:200px;
+  background:linear-gradient(135deg,#100e08 0%,#1c1700 100%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.car-vis::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(0deg,var(--panel) 0%,transparent 55%);
+}
+.car-emoji{font-size:5rem;filter:grayscale(0.3);}
+.car-body{padding:28px 28px 32px;}
+.car-cat{
+  font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;display:block;
+}
+.car-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.45rem;font-weight:400;margin-bottom:16px;
+}
+
+
+.car-price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.5rem;color:var(--gold);
+}
+.car-price small{font-family:'DM Sans',sans-serif;font-size:0.75rem;color:var(--muted);}
+.car-wa{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:18px;
+  background:var(--wa);color:#fff;
+  padding:12px;text-decoration:none;
+  font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;
+  font-weight:500;transition:opacity 0.2s;
+}
+.car-wa:hover{opacity:0.85;}
+.car-wa svg{width:14px;height:14px;fill:#fff;}
+
+
+
+
+
+
+
+
+
+
+/* ──────── CTA SOCIAL BUTTONS ──────── */
+.cta-socials{
+  display:flex;justify-content:center;align-items:center;gap:14px;
+  flex-wrap:wrap;
+  margin-bottom:32px;
+}
+.cta-social-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:17px 36px;
+  font-size:0.82rem;letter-spacing:2px;text-transform:uppercase;
+  font-weight:600;text-decoration:none;
+  transition:all 0.3s;
+  font-family:'DM Sans',sans-serif;
+  white-space:nowrap;
+}
+.cta-social-btn svg{width:19px;height:19px;flex-shrink:0;}
+.cta-social-btn:hover{transform:translateY(-3px);}
+.cta-social-btn.s-wa{
+  background:#25D366;color:#fff;
+  box-shadow:0 6px 24px rgba(37,211,102,0.18);
+}
+.cta-social-btn.s-wa svg{fill:#fff;}
+.cta-social-btn.s-wa:hover{box-shadow:0 14px 40px rgba(37,211,102,0.35);}
+.cta-social-btn.s-fb{
+  background:#1877F2;color:#fff;
+  box-shadow:0 6px 24px rgba(24,119,242,0.18);
+}
+.cta-social-btn.s-fb svg{fill:#fff;}
+.cta-social-btn.s-fb:hover{box-shadow:0 14px 40px rgba(24,119,242,0.35);}
+.cta-social-btn.s-sn{
+  background:linear-gradient(135deg,#FFFC00 0%,#FF0069 60%,#A200FF 100%);
+  color:#fff;
+  box-shadow:0 6px 24px rgba(255,0,105,0.18);
+}
+.cta-social-btn.s-sn svg{fill:#fff;}
+.cta-social-btn.s-sn:hover{box-shadow:0 14px 40px rgba(255,0,105,0.35);}
+@media(max-width:600px){
+  .cta-socials{flex-direction:column;align-items:stretch;}
+  .cta-social-btn{justify-content:center;}
+}
+
+/* ──────── SOCIAL BUTTONS ──────── */
+.car-socials{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin-top:12px;
+}
+.car-social{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:11px 6px;
+  font-size:0.68rem;letter-spacing:1.5px;text-transform:uppercase;
+  font-weight:600;text-decoration:none;
+  transition:all 0.25s;
+  font-family:'DM Sans',sans-serif;
+}
+.car-social svg{width:15px;height:15px;flex-shrink:0;}
+.car-social:hover{transform:translateY(-2px);filter:brightness(1.1);}
+.car-social.wa{background:#25D366;color:#fff;}
+.car-social.wa svg{fill:#fff;}
+.car-social.fb{background:#1877F2;color:#fff;}
+.car-social.fb svg{fill:#fff;}
+.car-social.sn{background:linear-gradient(135deg,#FFFC00,#FF0069,#A200FF);color:#fff;}
+.car-social.sn svg{fill:#fff;}
+
+
+
+/* ──────── GALLERY / VIBES ──────── */
+#vibes{
+  padding:100px 0;
+  background:var(--black);overflow:hidden;
+}
+.vibes-inner{padding:0 56px;margin-bottom:48px;}
+.vibes-track{
+  display:flex;gap:20px;
+  animation:slide 28s linear infinite;
+  width:max-content;
+}
+.vibes-track:hover{animation-play-state:paused;}
+@keyframes slide{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.vibe-card{
+  width:280px;height:200px;flex-shrink:0;
+  background:var(--panel);
+  border:1px solid rgba(200,168,75,0.07);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:12px;
+  font-size:3rem;
+  transition:border-color 0.3s;
+  position:relative;overflow:hidden;
+}
+.vibe-card::before{
+  content:attr(data-label);
+  position:absolute;bottom:14px;
+  font-size:0.65rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);font-family:'DM Sans',sans-serif;
+}
+
+/* ──────── BOOKING CTA ──────── */
+#cta{
+  padding:140px 56px;
+  background:linear-gradient(135deg,#0b0900 0%,var(--black) 60%);
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-glow{
+  position:absolute;
+  width:700px;height:700px;
+  background:radial-gradient(circle,rgba(200,168,75,0.07) 0%,transparent 60%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.cta-inner{position:relative;z-index:2;max-width:640px;margin:0 auto;}
+.cta-inner .sec-label{display:block;margin-bottom:16px;}
+.cta-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.8rem,7vw,5.5rem);font-weight:300;
+  line-height:1;margin-bottom:24px;
+}
+.cta-title em{font-style:italic;color:var(--gold);display:block;}
+.cta-desc{
+  font-size:0.95rem;line-height:1.8;color:var(--muted);
+  margin-bottom:52px;font-weight:300;
+}
+.cta-wa{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--wa);color:#fff;
+  padding:20px 52px;
+  font-size:0.88rem;letter-spacing:2.5px;text-transform:uppercase;
+  font-weight:500;text-decoration:none;
+  transition:all 0.35s;
+  font-family:'DM Sans',sans-serif;
+}
+.cta-wa:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(37,211,102,0.3);}
+.cta-wa svg{width:20px;height:20px;fill:#fff;}
+.cta-phone{
+  margin-top:28px;
+  font-size:0.78rem;letter-spacing:2px;
+  color:var(--muted);text-transform:uppercase;
+}
+.cta-phone a{color:var(--gold);text-decoration:none;}
+
+/* ──────── FOOTER ──────── */
+footer{
+  background:var(--off);
+  border-top:1px solid rgba(200,168,75,0.1);
+  padding:48px 56px 32px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
+}
+.foot-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.3rem;font-weight:300;letter-spacing:4px;
+  color:var(--gold);text-decoration:none;text-transform:uppercase;
+}
+.foot-logo em{color:var(--white);font-style:normal;}
+.foot-copy{font-size:0.75rem;color:var(--muted);letter-spacing:1px;}
+.foot-wa{
+  display:flex;align-items:center;gap:8px;
+  background:var(--wa);color:#fff;
+  padding:10px 22px;text-decoration:none;
+  font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;
+  font-weight:500;transition:opacity 0.2s;
+}
+.foot-wa:hover{opacity:0.85;}
+.foot-wa svg{width:14px;height:14px;fill:#fff;}
+
+/* ──────── FLOATING WA ──────── */
+.float-wa{
+  position:fixed;bottom:32px;right:32px;z-index:600;
+  width:58px;height:58px;
+  background:var(--wa);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 30px rgba(37,211,102,0.35);
+  text-decoration:none;
+  transition:transform 0.3s,box-shadow 0.3s;
+  animation:floatBounce 3s ease-in-out infinite;
+}
+.float-wa:hover{transform:scale(1.12);box-shadow:0 12px 40px rgba(37,211,102,0.5);}
+.float-wa svg{width:28px;height:28px;fill:#fff;}
+@keyframes floatBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+.float-wa-label{
+  position:fixed;bottom:42px;right:100px;z-index:599;
+  background:rgba(5,5,5,0.88);backdrop-filter:blur(10px);
+  border:1px solid var(--dim);
+  padding:10px 18px;
+  font-size:0.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--white);
+  white-space:nowrap;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s,right 0.3s;
+}
+.float-wa:hover ~ .float-wa-label,.float-wa-label:hover{opacity:1;right:104px;}
+
+/* ──────── MOBILE ──────── */
+@media(max-width:900px){
+  nav{padding:20px 24px;}
+  nav.stuck{padding:14px 24px;}
+  .nav-links{
+    display:none;flex-direction:column;
+    position:absolute;top:100%;left:0;right:0;
+    background:rgba(5,5,5,0.97);
+    padding:28px 24px;gap:24px;
+    border-bottom:1px solid var(--dim);
+  }
+  .nav-links.open{display:flex;}
+  .nav-wa{display:none;}
+  .burger{display:flex;}
+  .hero-line-v,.hero-line-v2{display:none;}
+  #hero{padding:100px 24px 60px;}
+  #services{padding:80px 24px;}
+  .services-list{grid-template-columns:1fr;}
+  #fleet{padding:80px 24px;}
+  .fleet-grid{grid-template-columns:1fr;}
+  #about{
+    padding:80px 24px;
+    grid-template-columns:1fr;gap:52px;
+  }
+   .about-right{display:none;}
+  #vibes{padding:80px 0;}
+  .vibes-inner{padding:0 24px;}
+  #cta{padding:100px 24px;}
+  footer{padding:40px 24px 28px;flex-direction:column;gap:16px;text-align:center;}
+  .float-wa{bottom:24px;right:20px;}
+  .float-wa-label{display:none;}
+  body{cursor:auto;}
+  
+}
+</style>
+</head>
+<body>
+
+
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="logo">Syphax<em>Driver</em></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#cta">Réserver</a></li>
+  </ul>
+  <a href="https://wa.me/33699210773?text=Bonjour%20SyphaxDRIVER%20je%20souhaite%20réserver%20un%20VTC" target="_blank" class="nav-wa">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+    Réserver sur WhatsApp
+  </a>
+  <button class="burger" id="burger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grain"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-line-v"></div>
+  <div class="hero-line-v2"></div>
+  <div class="hero-inner">
+    <h1 class="hero-title">
+      Chauffeur<br>
+      <span class="accent">Privé</span>
+    </h1>
+    <p class="hero-sub">Transport VTC haut de gamme partout en France. Discrétion, ponctualité et élégance pour chaque déplacement.</p>
+    <div class="hero-cta">
+      <a href="https://wa.me/33699210773?text=Bonjour%20SyphaxDRIVER%20je%20souhaite%20réserver%20un%20VTC" target="_blank" class="btn-wa">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        Réserver via WhatsApp
+      </a>
+    </div>
+    <p class="cta-phone">Ou appelez le <a href="tel:+33699210773">+33699210773</a></p>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header">
+    <span class="sec-label">Nos Prestations</span>
+    <h2 class="sec-title">Un service <em>sur-mesure</em></h2>
+  </div>
+  <div class="services-list">
+    <div class="srv">
+      <span class="srv-num">01</span>
+      <span class="srv-icon">✈️</span>
+      <h3 class="srv-title">Transferts Aéroport</h3>
+      <p class="srv-desc">CDG, Orly, Beauvais — Suivi de vol en temps réel, accueil en salle d'arrivée, ponctualité garantie quelles que soient les conditions.</p>
+    </div>
+    <div class="srv">
+      <span class="srv-num">02</span>
+      <span class="srv-icon">💼</span>
+      <h3 class="srv-title">Mise à Disposition</h3>
+      <p class="srv-desc">Chauffeur dédié à l'heure ou à la journée. Idéal pour vos réunions, rendez-vous professionnels et déplacements d'affaires.</p>
+    </div>
+    <div class="srv">
+      <span class="srv-num">03</span>
+      <span class="srv-icon">🌍</span>
+      <h3 class="srv-title">Longue Distance</h3>
+      <p class="srv-desc">Voyages vers toute la France et l'Europe. Confort absolu pour les longs trajets, pauses personnalisées selon vos préférences.</p>
+    </div>
+    <div class="srv">
+      <span class="srv-num">04</span>
+      <span class="srv-icon">🎭</span>
+      <h3 class="srv-title">Soirées & Spectacles</h3>
+      <p class="srv-desc">Opéra, galas, dîners étoilés — votre chauffeur vous attend pour un retour serein, quelle que soit l'heure.</p>
+    </div>
+    <div class="srv">
+      <span class="srv-num">05</span>
+      <span class="srv-icon">🏢</span>
+      <h3 class="srv-title">Compte Entreprise</h3>
+      <p class="srv-desc">Solutions de transport pour vos équipes et clients VIP. Facturation mensuelle, reporting détaillé et tarifs préférentiels.</p>
+    </div>
+    <div class="srv">
+      <span class="srv-num">06</span>
+      <span class="srv-icon">⏱️</span>
+      <h3 class="srv-title">Disponible 24h/24</h3>
+      <p class="srv-desc">Service disponible à toute heure, 7 jours sur 7. Réservation rapide et confirmation immédiate.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- VIBES STRIP -->
+<section id="vibes">
+  <div class="vibes-inner">
+    <span class="sec-label">Expérience</span>
+  </div>
+  <div style="overflow:hidden;">
+    <div class="vibes-track" id="vibesTrack">
+      <div class="vibe-card" data-label="Aéroport">✈️</div>
+      <div class="vibe-card" data-label="Business">💼</div>
+      <div class="vibe-card" data-label="Nuit">🌙</div>
+      <div class="vibe-card" data-label="Luxe">🥂</div>
+      <div class="vibe-card" data-label="France">🇫🇷</div>
+      <div class="vibe-card" data-label="VIP">⭐</div>
+      <div class="vibe-card" data-label="Confort">🛋️</div>
+      <!-- duplicate for infinite loop -->
+      <div class="vibe-card" data-label="Aéroport">✈️</div>
+      <div class="vibe-card" data-label="Business">💼</div>
+      <div class="vibe-card" data-label="Nuit">🌙</div>
+      <div class="vibe-card" data-label="Luxe">🥂</div>
+      <div class="vibe-card" data-label="France">🇫🇷</div>
+      <div class="vibe-card" data-label="VIP">⭐</div>
+      <div class="vibe-card" data-label="Confort">🛋️</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <span class="sec-label">Réservation Instantanée</span>
+    <h2 class="cta-title">Prêt à voyager<em>avec Syphax ?</em></h2>
+    <p class="cta-desc">Contactez-nous directement sur WhatsApp pour une réponse immédiate et une confirmation en moins de 5 minutes.</p>
+    <div class="cta-socials">
+      <a href="https://wa.me/33699210773?text=Bonjour%20SyphaxDRIVER%2C%20je%20souhaite%20réserver%20un%20chauffeur%20privé." target="_blank" class="cta-social-btn s-wa">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        WhatsApp
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61575417527056" target="_blank" class="cta-social-btn s-fb">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </a>
+      <a href="https://www.snapchat.com/add/syphax-driver" target="_blank" class="cta-social-btn s-sn">
+        <svg viewBox="0 0 24 24"><path d="M12.166.35c3.338.007 6.442 1.978 7.938 5.05.6 1.24.755 2.598.721 3.964.336.173.719.249 1.094.168.421-.046.824-.225 1.242-.147.336.066.694.28.77.633.1.449-.224.853-.577 1.09-.526.356-1.148.493-1.74.665-.168.05-.363.118-.468.27-.156.222-.073.51.013.745.403 1.086 1.07 2.073 1.979 2.788.373.294.79.527 1.228.701.33.13.695.213.965.457.218.2.313.528.2.8-.138.337-.488.526-.82.617-.62.168-1.258.267-1.895.368-.252.04-.518.104-.706.287-.21.205-.28.503-.351.776-.083.322-.258.657-.575.784-.312.126-.637.005-.94-.09-.512-.162-1.004-.38-1.533-.477-.415-.075-.845-.02-1.243.107-.8.257-1.49.778-2.186 1.255-.464.32-.932.643-1.45.865-.58.248-1.22.354-1.847.244-.612-.108-1.168-.413-1.681-.762-.718-.487-1.38-.996-2.17-1.33-.452-.19-.936-.289-1.424-.263-.5.028-.98.186-1.464.33-.295.09-.61.196-.914.076-.313-.122-.49-.454-.574-.773-.072-.275-.142-.575-.353-.78-.186-.182-.45-.247-.7-.287-.637-.101-1.274-.2-1.894-.368-.333-.09-.682-.28-.82-.617-.112-.272-.018-.6.2-.8.269-.244.635-.327.964-.457.438-.174.856-.407 1.229-.701.908-.715 1.575-1.702 1.978-2.788.086-.234.17-.523.013-.745-.105-.152-.3-.22-.468-.27-.592-.172-1.214-.309-1.74-.665-.353-.237-.677-.641-.577-1.09.076-.353.434-.567.77-.633.418-.078.821.101 1.242.147.361.077.73.01 1.07-.153-.002-.12-.005-.24-.01-.36C5.386 2.516 8.613.343 12.166.35z"/></svg>
+        Snapchat
+      </a>
+    </div>
+    <p class="cta-phone">Ou appelez le <a href="tel:+33699210773">+33699210773</a></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#hero" class="foot-logo">Syphax<em>Driver</em></a>
+  <p class="foot-copy">© 2026 SyphaxDriver</p>
+  <a href="https://wa.me/33699210773" target="_blank" class="foot-wa">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+    WhatsApp
+  </a>
+</footer>
+
+<!-- FLOATING WHATSAPP -->
+<a href="https://wa.me/33699210773?text=Bonjour%20SyphaxDriver%2C%20je%20souhaite%20réserver." target="_blank" class="float-wa" id="floatWa">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+</a>
+<div class="float-wa-label">Réserver maintenant</div>
+
+<script>
+
+
+// Navbar scroll
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('stuck',scrollY>60);});
+
+// Counters
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target;
+    const target=+el.dataset.count;
+    if(!target)return;
+    let n=0,step=target/70;
+    const t=setInterval(()=>{
+      n+=step;if(n>=target){n=target;clearInterval(t);}
+      el.textContent=Math.floor(n).toLocaleString('fr-FR')+(target>=1000?'+':'');
+    },16);
+    obs.unobserve(el);
+  });
+},{threshold:0.5});
+document.querySelectorAll('[data-count]').forEach(el=>obs.observe(el));
+
+// Reveal on scroll
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{e.target.style.opacity='1';e.target.style.transform='translateY(0)';},i*70);
+      revObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.srv,.car-card,.apoint,.astat').forEach(el=>{
+  el.style.opacity='0';el.style.transform='translateY(28px)';
+  el.style.transition='opacity 0.6s ease,transform 0.6s ease';
+  revObs.observe(el);
+});
+</script>
+</body>
+</html>
